@@ -99,39 +99,6 @@ class ProductScreen extends StatelessWidget {
               SizedBox(
                 height: 16,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 5, right: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (!added) ...[
-                      Icon(
-                        Icons.shopping_basket,
-                        color: Color.fromRGBO(44, 209, 172, 1),
-                        size: 16,
-                      ),
-                      Text(
-                        'Add to cart',
-                        style: TextStyle(
-                          fontFamily: 'Varela',
-                          color: Color.fromRGBO(44, 209, 172, 1),
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                    if (added) ...[
-                      Text(
-                        '3',
-                        style: TextStyle(
-                            fontFamily: 'Varela',
-                            color: Color.fromRGBO(44, 209, 172, 1),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ]
-                  ],
-                ),
-              )
             ],
           ),
         ),
