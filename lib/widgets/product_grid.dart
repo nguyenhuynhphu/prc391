@@ -19,6 +19,7 @@ class _ProductGridState extends State<ProductGrid> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+          color: Colors.amberAccent,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 180,
           decoration: BoxDecoration(color: Colors.white),
