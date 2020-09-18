@@ -3,7 +3,7 @@ import 'dart:ffi';
 class Product {
   int id;
   String name;
-  Float price;
+  double price;
   String desc;
   String image;
 

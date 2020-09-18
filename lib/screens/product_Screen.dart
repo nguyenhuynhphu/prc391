@@ -8,19 +8,16 @@ class ProductScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: ListView(
         children: [
-          SizedBox(
-            height: 20,
-          ),
           Container(
             padding: EdgeInsets.only(right: 10, left: 10),
             width: MediaQuery.of(context).size.width - 30,
-            height: MediaQuery.of(context).size.height - 280,
+            height: MediaQuery.of(context).size.height - 240,
             child: GridView.count(
               crossAxisCount: 2,
               primary: false,
               crossAxisSpacing: 10,
               mainAxisSpacing: 15,
-              childAspectRatio: 0.9,
+              childAspectRatio: 0.8,
               children: [
                 _buildCard('Cookie Choco', '\$3.99', 'images/cookiechoco.jpg',
                     false, context),
@@ -43,7 +40,7 @@ class ProductScreen extends StatelessWidget {
   Widget _buildCard(
       String name, String price, String image, bool added, context) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+      padding: EdgeInsets.only(top: 1, bottom: 5, left: 5, right: 5),
       child: InkWell(
         onTap: () {},
         onLongPress: () {
@@ -56,6 +53,8 @@ class ProductScreen extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
+              image: new DecorationImage(
+                  image: AssetImage(image), fit: BoxFit.contain),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -65,74 +64,36 @@ class ProductScreen extends StatelessWidget {
                 )
               ],
               color: Colors.white),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              Hero(
-                  tag: image,
-                  child: Container(
-                    height: 75,
-                    width: 75,
-                    decoration: BoxDecoration(
-                        image: new DecorationImage(
-                            image: AssetImage(image), fit: BoxFit.fill)),
-                  )),
-              SizedBox(
-                height: 7,
-              ),
-              Text(
-                price,
-                style: TextStyle(
-                    color: Color.fromRGBO(44, 209, 172, 1),
-                    fontFamily: 'Varela',
-                    fontSize: 20),
-              ),
-              Text(
-                name,
-                style: TextStyle(
-                    color: Color(0xFF575E67),
-                    fontFamily: 'Varela',
-                    fontSize: 16),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5, right: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (!added) ...[
-                      Icon(
-                        Icons.shopping_basket,
-                        color: Color.fromRGBO(44, 209, 172, 1),
-                        size: 16,
-                      ),
-                      Text(
-                        'Add to cart',
-                        style: TextStyle(
-                          fontFamily: 'Varela',
-                          color: Color.fromRGBO(44, 209, 172, 1),
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                    if (added) ...[
-                      Text(
-                        '3',
-                        style: TextStyle(
-                            fontFamily: 'Varela',
-                            color: Color.fromRGBO(44, 209, 172, 1),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ]
-                  ],
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.black38.withOpacity(0.7),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15))),
+            margin: EdgeInsets.only(top: 160),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  price,
+                  style: TextStyle(
+                      color: Color.fromRGBO(44, 209, 172, 1),
+                      fontFamily: 'Varela',
+                      fontSize: 20),
                 ),
-              )
-            ],
+                Text(
+                  name,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Varela',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
           ),
         ),
       ),
