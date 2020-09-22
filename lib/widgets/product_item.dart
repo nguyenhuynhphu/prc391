@@ -2,71 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/screens/productdetail_screen.dart';
 
-class ProductScreen extends StatefulWidget {
-  final List<Product> items;
-
-  const ProductScreen({Key key, this.items}) : super(key: key);
+class ProductItem extends StatefulWidget {
+  final void Function(Product) addToCart;
+  final Product item;
+  const ProductItem({Key key, this.item, this.addToCart}) : super(key: key);
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  _ProductItemState createState() => _ProductItemState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _ProductItemState extends State<ProductItem> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.only(right: 10, left: 10),
-            width: MediaQuery.of(context).size.width - 30,
-            height: MediaQuery.of(context).size.height - 240,
-            child: widget.items == null
-                ? Center(
-                    child: Text(
-                      'List items is empty',
-                      style: TextStyle(color: Colors.black45, fontSize: 30),
-                    ),
-                  )
-                : GridView.count(
-                    crossAxisCount: 2,
-                    primary: false,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 15,
-                    childAspectRatio: 0.8,
-                    children: [
-                      for (Product i in widget.items)
-                        _buildCard(i.name, i.price.toString(), i.image, context)
-                    ],
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCard(String name, String price, String image, context) {
     return Padding(
       padding: EdgeInsets.only(top: 1, bottom: 5, left: 5, right: 5),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          widget.addToCart(widget.item);
+        },
         onLongPress: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ProductDetailScreen(
-                    image: image,
-                    name: name,
-                    price: price,
+                    item: widget.item,
                   )));
         },
         child: Container(
           decoration: BoxDecoration(
               image: new DecorationImage(
-                  image: AssetImage(image), fit: BoxFit.contain),
+                  image: AssetImage(widget.item.image), fit: BoxFit.contain),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -87,14 +49,14 @@ class _ProductScreenState extends State<ProductScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  price + '\$',
+                  widget.item.price.toString() + '\$',
                   style: TextStyle(
                       color: Color.fromRGBO(44, 209, 172, 1),
                       fontFamily: 'Varela',
                       fontSize: 20),
                 ),
                 Text(
-                  name,
+                  widget.item.name,
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Varela',

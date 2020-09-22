@@ -2,7 +2,6 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prc391/screens/product_Screen.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   OrderDetailScreen();

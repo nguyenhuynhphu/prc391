@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/models/temp_data.dart';
-import 'package:prc391/screens/product_Screen.dart';
 import 'package:prc391/screens/order_detail.dart';
+import 'package:prc391/screens/product_item.dart';
 import 'package:prc391/services/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,12 +20,24 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> view_items = null;
   ProductBloc productBloc = ProductBloc();
 
+  Cart cart;
+  StreamController streamListController = StreamController<Cart>.broadcast();
+  Stream<Cart> get cartStream => streamListController.stream;
+  Sink get cartSink => streamListController.sink;
+
   final txtSearch = TextEditingController();
+
+  void addToCart(Product product) {
+    cart.addItem(product);
+    cartSink.add(cart);
+  }
 
   @override
   void initState() {
     items = TEMP_DATA;
     view_items = items;
+    cart = new Cart();
+    cartSink.add(cart);
     super.initState();
   }
 
@@ -104,8 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   stream: productBloc.productStream,
                   initialData: view_items,
                   builder: (context, snapshot) {
-                    return ProductScreen(
+                    return ProductGrid(
                       items: snapshot.data,
+                      addToCart: addToCart,
                     );
                   }),
             ),
@@ -121,40 +137,48 @@ class _HomeScreenState extends State<HomeScreen> {
                   tag: 'order',
                   child: Material(
                       type: MaterialType.transparency, // likely
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10),
-                        width: MediaQuery.of(context).size.width - 40,
-                        height: 70,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Color.fromRGBO(44, 209, 172, 1)),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "33 items = 44.00 \$",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
+                      child: StreamBuilder<Cart>(
+                          initialData: cart,
+                          stream: cartStream,
+                          builder: (context, snapshot) {
+                            return Container(
+                              margin: EdgeInsets.only(top: 10),
+                              width: MediaQuery.of(context).size.width - 40,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color.fromRGBO(44, 209, 172, 1)),
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        snapshot.data.sumQuantity.toString() +
+                                            " items = " +
+                                            snapshot.data.total.toString() +
+                                            " \$",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    right: 10,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(
+                                        Icons.arrow_right,
+                                        color: Colors.white,
+                                        size: 35,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Positioned.fill(
-                              right: 10,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Icon(
-                                  Icons.arrow_right,
-                                  color: Colors.white,
-                                  size: 35,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
+                            );
+                          })),
                 )),
           ],
         ));

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/widgets/bottombar_product_detail.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final image, price, name;
+  final Product item;
 
-  const ProductDetailScreen({Key key, this.image, this.price, this.name})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key key,
+    this.item,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +42,9 @@ class ProductDetailScreen extends StatelessWidget {
           child: ListView(
             children: [
               Hero(
-                tag: image,
+                tag: item.image,
                 child: Image.asset(
-                  image,
+                  item.image,
                   height: 150,
                   width: 100,
                   fit: BoxFit.contain,
@@ -54,7 +57,7 @@ class ProductDetailScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    name,
+                    item.name,
                     style: TextStyle(
                       fontFamily: 'Varela',
                       fontSize: 22,
@@ -63,7 +66,7 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    price,
+                    item.price.toString(),
                     style: TextStyle(
                       fontFamily: 'Varela',
                       fontSize: 22,
