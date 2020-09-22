@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prc391/models/product/Product.dart';
+import 'package:prc391/models/temp_data.dart';
 import 'package:prc391/screens/product_Screen.dart';
 import 'package:prc391/screens/order_detail.dart';
-import 'package:prc391/widgets/product_grid.dart';
+import 'package:prc391/services/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -11,10 +13,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Product> items = null;
+  List<Product> view_items = null;
+  ProductBloc productBloc = ProductBloc();
+
+  final txtSearch = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
+    items = TEMP_DATA;
+    view_items = items;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    txtSearch.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -23,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(color: Colors.white),
         child: ListView(
           children: [
+            //thanh tim kiem
             Container(
               margin: EdgeInsets.only(right: 15, left: 15, top: 10, bottom: 10),
               padding: EdgeInsets.only(left: 9, right: 0),
@@ -46,6 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         1 * 2 -
                         50,
                     child: TextField(
+                      controller: txtSearch,
+                      onChanged: (value) {
+                        bool flag = productBloc.searchProduct(value, items);
+                        //xu ly neu search ko ra
+                      },
                       decoration: InputDecoration(
                           hintText: 'example: cookie',
                           border: InputBorder.none),
@@ -60,7 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color.fromRGBO(44, 209, 172, 1),
                       ),
                       child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            String name = txtSearch.text;
+                            bool flag = productBloc.searchProduct(name, items);
+                            //xu ly neu search ko ra
+                            print(flag);
+                          },
                           child: Icon(
                             Icons.search,
                             color: Colors.white,
@@ -68,11 +95,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
+            //-------------list item
             Container(
               height: MediaQuery.of(context).size.height - 240,
               width: MediaQuery.of(context).size.width,
-              child: ProductScreen(),
+              child: StreamBuilder<Object>(
+                  stream: productBloc.productStream,
+                  initialData: view_items,
+                  builder: (context, snapshot) {
+                    return ProductScreen(
+                      items: snapshot.data,
+                    );
+                  }),
             ),
+
+            //--------Button thanh toan
             FlatButton(
                 color: Colors.transparent,
                 onPressed: () =>
@@ -121,4 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ));
   }
+
+//exetension function
+
 }

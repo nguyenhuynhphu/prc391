@@ -38,4 +38,22 @@ class Product {
         'desc': desc,
         'image': image,
       };
+
+  List<Product> searchProduct(name, items) {
+    List<Product> result = [];
+    for (Product item in items) {
+      if (item.name.toLowerCase().contains(name)) {
+        result.add(item);
+      }
+    }
+    showListProduct(result);
+    return result == [] ? null : result;
+  }
+
+  void showListProduct(items) {
+    print('-----------');
+    for (Product item in items) {
+      print(item.name + ' - ' + item.price.toString());
+    }
+  }
 }

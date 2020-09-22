@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/screens/productdetail_screen.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
+  final List<Product> items;
+
+  const ProductScreen({Key key, this.items}) : super(key: key);
+  @override
+  _ProductScreenState createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,33 +26,31 @@ class ProductScreen extends StatelessWidget {
             padding: EdgeInsets.only(right: 10, left: 10),
             width: MediaQuery.of(context).size.width - 30,
             height: MediaQuery.of(context).size.height - 240,
-            child: GridView.count(
-              crossAxisCount: 2,
-              primary: false,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 15,
-              childAspectRatio: 0.8,
-              children: [
-                _buildCard('Cookie Choco', '\$3.99', 'images/cookiechoco.jpg',
-                    false, context),
-                _buildCard('Cookie Classic', '\$3.99',
-                    'images/cookieclassic.jpg', true, context),
-                _buildCard('Cookie Cream', '\$3.99', 'images/cookiecream.jpg',
-                    true, context),
-                _buildCard('Cookie Mint', '\$3.99', 'images/cookiemint.jpg',
-                    true, context),
-                _buildCard('Cookie Vanila', '\$3.99', 'images/cookievan.jpg',
-                    true, context),
-              ],
-            ),
+            child: widget.items == null
+                ? Center(
+                    child: Text(
+                      'List items is empty',
+                      style: TextStyle(color: Colors.black45, fontSize: 30),
+                    ),
+                  )
+                : GridView.count(
+                    crossAxisCount: 2,
+                    primary: false,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 0.8,
+                    children: [
+                      for (Product i in widget.items)
+                        _buildCard(i.name, i.price.toString(), i.image, context)
+                    ],
+                  ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCard(
-      String name, String price, String image, bool added, context) {
+  Widget _buildCard(String name, String price, String image, context) {
     return Padding(
       padding: EdgeInsets.only(top: 1, bottom: 5, left: 5, right: 5),
       child: InkWell(
@@ -75,7 +87,7 @@ class ProductScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  price,
+                  price + '\$',
                   style: TextStyle(
                       color: Color.fromRGBO(44, 209, 172, 1),
                       fontFamily: 'Varela',

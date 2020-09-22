@@ -1,6 +1,6 @@
 import 'package:prc391/models/product/Product.dart';
 
-List TEMP_DATA = [
+List<Product> TEMP_DATA = [
   new Product(
       id: 1,
       name: "Cookie Choco",
