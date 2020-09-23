@@ -79,6 +79,13 @@ class RootScreenState extends State {
       // userRepository
       //     .fetchUserByEmail(email.toString().trim())
       //     .then((value) => currentUser = value);
+      setState(() {
+        currentUser = new User(
+            id: 1,
+            email: "phunh985@gmail.com",
+            name: "Nguyen Huynh Phu",
+            roleId: 1);
+      });
     } catch (e) {
       return e.toString();
     }
@@ -111,7 +118,7 @@ class RootScreenState extends State {
                   //             _updateToken(value2.id.toString(), value3))));
 
                   //return MainScreen(auth.signOut);
-                  return MainScreen(signOut);
+                  return MainScreen(signOut, this.currentUser);
                 } else {
                   return LoginScreen(signIn);
                 }

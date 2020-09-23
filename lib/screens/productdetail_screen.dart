@@ -94,6 +94,19 @@ the cookie monster tries to steal the cookie but''',
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        backgroundColor: Color.fromRGBO(44, 209, 172, 1),
+        child: Column(children: [
+          Text(
+            "2",
+            style: TextStyle(fontSize: 19),
+          ),
+          Icon(Icons.fastfood)
+        ]),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomBarProduct(),
     );
