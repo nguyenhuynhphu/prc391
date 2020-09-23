@@ -8,11 +8,11 @@ class BottomBar extends StatelessWidget {
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
       notchMargin: 6.0,
-      color: Colors.transparent,
+      color: Colors.white,
       elevation: 9,
       clipBehavior: Clip.antiAlias,
       child: Container(
-        height: 50,
+        height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(25),
@@ -30,12 +30,11 @@ class BottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: () {},
                     child: Icon(
-                      Icons.search,
+                      Icons.remove_circle_outline,
                       color: Color.fromRGBO(44, 209, 172, 1),
+                      size: 35,
                     ),
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30)),
@@ -52,8 +51,9 @@ class BottomBar extends StatelessWidget {
                   FlatButton(
                     onPressed: () {},
                     child: Icon(
-                      Icons.shopping_basket,
+                      Icons.add_circle_outline,
                       color: Color.fromRGBO(44, 209, 172, 1),
+                      size: 35,
                     ),
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30)),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:prc391/widgets/bottombar.dart';
+import 'package:prc391/models/product/Product.dart';
+import 'package:prc391/widgets/bottombar_product_detail.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final image, price, name;
+  final Product item;
 
-  const ProductDetailScreen({Key key, this.image, this.price, this.name})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key key,
+    this.item,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,36 +37,61 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontFamily: 'Varela',
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(44, 209, 172, 1),
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: ListView(
+            children: [
+              Hero(
+                tag: item.image,
+                child: Image.asset(
+                  item.image,
+                  height: 150,
+                  width: 100,
+                  fit: BoxFit.contain,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Hero(
-              tag: image,
-              child: Image.asset(
-                image,
-                height: 150,
-                width: 100,
-                fit: BoxFit.contain,
+              SizedBox(
+                height: 15,
               ),
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.name,
+                    style: TextStyle(
+                      fontFamily: 'Varela',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    item.price.toString(),
+                    style: TextStyle(
+                      fontFamily: 'Varela',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Description: ' +
+                    '''the cookie is in the cookie jar
+the cookie is now a picture
+the cookie monster tries to steal the cookie but''',
+                style: TextStyle(
+                  fontFamily: 'Varela',
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -80,7 +108,7 @@ class ProductDetailScreen extends StatelessWidget {
         ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBarProduct(),
     );
   }
 }
