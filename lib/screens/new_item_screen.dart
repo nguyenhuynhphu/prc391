@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:prc391/models/product/Product.dart';
 
 class NewItemScreen extends StatefulWidget {
   NewItemScreen();
@@ -8,6 +13,10 @@ class NewItemScreen extends StatefulWidget {
 }
 
 class NewItemScreenState extends State<NewItemScreen> {
+  File _image;
+  final nameController = TextEditingController();
+  final priceController = TextEditingController();
+  final descriptionController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -32,27 +41,32 @@ class NewItemScreenState extends State<NewItemScreen> {
                       children: [
                         Positioned(
                             child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 260,
-                          margin: EdgeInsets.only(bottom: 25),
-                          child: Image.asset(
-                            'images/no_image.png',
-                            fit: BoxFit.fill,
-                          ),
-                        )),
+                                width: MediaQuery.of(context).size.width,
+                                height: 260,
+                                margin: EdgeInsets.only(bottom: 25),
+                                child: handelPicture())),
                         Positioned.fill(
                           bottom: 50,
                           child: Align(
                               alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    top: 10, bottom: 10, left: 15, right: 15),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(18),
-                                    border: Border.all(
-                                        color: Colors.black, width: 0.5)),
-                                child: Text("Pick a picture"),
+                              child: FlatButton(
+                                onPressed: () async {
+                                  var pickedFile = await ImagePicker()
+                                      .getImage(source: ImageSource.gallery);
+                                  setState(() {
+                                    _image = File(pickedFile.path);
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      top: 10, bottom: 10, left: 15, right: 15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(18),
+                                      border: Border.all(
+                                          color: Colors.black, width: 0.5)),
+                                  child: Text("Pick a picture"),
+                                ),
                               )),
                         )
                       ],
@@ -75,6 +89,7 @@ class NewItemScreenState extends State<NewItemScreen> {
                               Expanded(
                                 flex: 7,
                                 child: TextField(
+                                  controller: nameController,
                                   decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -101,6 +116,7 @@ class NewItemScreenState extends State<NewItemScreen> {
                               Expanded(
                                 flex: 7,
                                 child: TextField(
+                                  controller: priceController,
                                   decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -127,6 +143,7 @@ class NewItemScreenState extends State<NewItemScreen> {
                               Expanded(
                                 flex: 7,
                                 child: TextField(
+                                  controller: descriptionController,
                                   maxLines: 5,
                                   decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
@@ -155,7 +172,7 @@ class NewItemScreenState extends State<NewItemScreen> {
                         margin: EdgeInsets.only(left: 10, right: 10),
                         width: 150,
                         child: RaisedButton(
-                          onPressed: () => {},
+                          onPressed: () => {Navigator.pop(context)},
                           color: Color.fromRGBO(44, 209, 172, 1),
                           child: Text(
                             "Cancel",
@@ -167,7 +184,7 @@ class NewItemScreenState extends State<NewItemScreen> {
                         margin: EdgeInsets.only(left: 10, right: 10),
                         width: 150,
                         child: RaisedButton(
-                          onPressed: () => {},
+                          onPressed: () => saveProduct(),
                           color: Color.fromRGBO(44, 209, 172, 1),
                           child: Text(
                             "Save",
@@ -182,5 +199,38 @@ class NewItemScreenState extends State<NewItemScreen> {
             ),
           ),
         ));
+  }
+
+  handelPicture() {
+    if (this._image != null) {
+      return Image.file(
+        this._image,
+        fit: BoxFit.fill,
+      );
+    } else {
+      return Image.asset(
+        'images/no_image.png',
+        fit: BoxFit.fill,
+      );
+    }
+  }
+
+  saveProduct() async {
+    var product;
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(_image.absolute.path);
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+
+    storageReference.getDownloadURL().then((fileURL) {
+      product = new Product(
+          name: nameController.text,
+          desc: descriptionController.text,
+          price: double.parse(priceController.text),
+          image: fileURL,
+          id: 0);
+      print("TOOOOOOO ${product.image}");
+    });
+    print(product);
   }
 }

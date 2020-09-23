@@ -1,8 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prc391/screens/product_Screen.dart';
+import 'package:prc391/widgets/order_item.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   OrderDetailScreen();
@@ -21,21 +19,29 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
-                  color: Colors.white24,
+                  color: Color.fromRGBO(44, 209, 172, 1),
                 ),
-                child: Stack(
+                child: Column(
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView(
-                        children: [
-                          _ItemOrder('Cookie choco', 3.9, 1, context),
-                          _ItemOrder('Cookie mint', 3.9, 2, context),
-                          _ItemOrder('Cookie classic', 2, 4, context),
-                        ],
-                      ),
-                    ),
+                        height: MediaQuery.of(context).size.height - 150,
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(
+                            top: 15, bottom: 10, left: 10, right: 10),
+                        decoration: BoxDecoration(color: Colors.white),
+                        child: Column(
+                          children: [
+                            OrderItem('Cookie choco', 3.9, 1),
+                            OrderItem('Cookie mint', 3.9, 2),
+                            OrderItem('Cookie classic', 2, 4),
+                            OrderItem('Cookie choco', 3.9, 1),
+                            OrderItem('Cookie mint', 3.9, 2),
+                            OrderItem('Cookie classic', 2, 4),
+                            OrderItem('Cookie choco', 3.9, 1),
+                            OrderItem('Cookie mint', 3.9, 2),
+                            OrderItem('Cookie classic', 2, 4),
+                          ],
+                        )),
                     Positioned(
                       top: MediaQuery.of(context).size.height - 150,
                       child: Container(
@@ -126,84 +132,4 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   ],
                 ))));
   }
-}
-
-Widget _ItemOrder(String name, double price, int quantity, context) {
-  return Container(
-    margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-    decoration:
-        BoxDecoration(border: Border.all(width: 1, color: Colors.black38)),
-    child: Row(
-      children: [
-        //so luong
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(),
-          child: Center(
-            child: Text(
-              quantity.toString() + 'x',
-              style: TextStyle(
-                  color: Color.fromRGBO(44, 209, 172, 1),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 3,
-        ),
-        //chi tiet
-        Container(
-          width: MediaQuery.of(context).size.width - 190,
-          height: 80,
-          decoration: BoxDecoration(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'price: ' + price.toString() + '\$',
-                    style: TextStyle(color: Colors.black54, fontSize: 18),
-                  ),
-                  Text(
-                    'total: ' + (price * quantity).toString() + '\$',
-                    style: TextStyle(color: Colors.black54, fontSize: 18),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: 3,
-        ),
-        //gia va xoa
-        Container(
-          margin: EdgeInsets.all(10),
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(color: Colors.redAccent),
-          child: Center(
-              child: Icon(
-            Icons.delete_outline,
-            color: Colors.white,
-          )),
-        )
-      ],
-    ),
-  );
 }
