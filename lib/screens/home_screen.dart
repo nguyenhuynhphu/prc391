@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/models/temp_data.dart';
-import 'package:prc391/screens/order_detail.dart';
-import 'package:prc391/screens/product_grid.dart';
+import 'package:prc391/screens/order_detail_screen.dart';
+import 'package:prc391/widgets/product_grid.dart';
 import 'package:prc391/services/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
