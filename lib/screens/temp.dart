@@ -1,114 +1,80 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:prc391/widgets/bottombar.dart';
 
-void main() {
-  runApp(MyApp());
-}
+class ProductDetailScreen extends StatelessWidget {
+  final image, price, name;
 
-class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
-
-  @override
-  MyAppState createState() {
-    return MyAppState();
-  }
-}
-
-class MyAppState extends State<MyApp> {
-  final items =
-      List<String>.generate(20, (i) => "Item ${i + 1} A B C D E... X Y Z");
-
-  String whatHappened;
+  const ProductDetailScreen({Key key, this.image, this.price, this.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Notification Items List';
-
-    return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-
-            return Dismissible(
-              key: Key(item),
-              onDismissed: (direction) {
-                setState(() {
-                  items.removeAt(index);
-                });
-
-                Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text("$item was $whatHappened")));
-              },
-              confirmDismiss: (DismissDirection dismissDirection) async {
-                switch (dismissDirection) {
-                  case DismissDirection.endToStart:
-                    whatHappened = 'ARCHIVED';
-                    return await _showConfirmationDialog(context, 'Archive') ==
-                        true;
-                  case DismissDirection.startToEnd:
-                    whatHappened = 'DELETED';
-                    return await _showConfirmationDialog(context, 'Delete') ==
-                        true;
-                  case DismissDirection.horizontal:
-                  case DismissDirection.vertical:
-                  case DismissDirection.up:
-                  case DismissDirection.down:
-                    assert(false);
-                }
-                return false;
-              },
-              background: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                color: Colors.red,
-                alignment: Alignment.centerLeft,
-                child: Icon(Icons.cancel),
-              ),
-              secondaryBackground: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                color: Colors.green,
-                alignment: Alignment.centerRight,
-                child: Icon(Icons.check),
-              ),
-              child: ListTile(title: Text('$item')),
-            );
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color(0xFF545D68)),
+          onPressed: () {
+            Navigator.of(context).pop();
           },
         ),
-      ),
-    );
-  }
-}
-
-Future<bool> _showConfirmationDialog(BuildContext context, String action) {
-  return showDialog<bool>(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Do you want to $action this item?'),
+        title: Text(
+          'Pickup',
+          style: TextStyle(
+              fontFamily: 'Varela', fontSize: 20, color: Color(0xFF545D68)),
+        ),
         actions: <Widget>[
-          FlatButton(
-            child: const Text('Yes'),
-            onPressed: () {
-              Navigator.pop(context, true); // showDialog() returns true
-            },
-          ),
-          FlatButton(
-            child: const Text('No'),
-            onPressed: () {
-              Navigator.pop(context, false); // showDialog() returns false
-            },
+          IconButton(
+            icon: Icon(Icons.notifications_none, color: Color(0xFF545D68)),
+            onPressed: () {},
           ),
         ],
-      );
-    },
-  );
+      ),
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontFamily: 'Varela',
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromRGBO(44, 209, 172, 1),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Hero(
+              tag: image,
+              child: Image.asset(
+                image,
+                height: 150,
+                width: 100,
+                fit: BoxFit.contain,
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        backgroundColor: Color.fromRGBO(44, 209, 172, 1),
+        child: Icon(Icons.fastfood),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 }

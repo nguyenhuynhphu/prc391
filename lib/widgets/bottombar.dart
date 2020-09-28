@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/product/Product.dart';
 
-class BottomBar extends StatelessWidget {
-  const BottomBar({Key key}) : super(key: key);
+class BottomBar extends StatefulWidget {
+  final void Function() sub;
+  final void Function() add;
+  const BottomBar({Key key, this.sub, this.add}) : super(key: key);
 
+  @override
+  _BottomBarState createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -12,7 +20,7 @@ class BottomBar extends StatelessWidget {
       elevation: 9,
       clipBehavior: Clip.antiAlias,
       child: Container(
-        height: 80,
+        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(25),
@@ -30,7 +38,9 @@ class BottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.sub();
+                    },
                     child: Icon(
                       Icons.remove_circle_outline,
                       color: Color.fromRGBO(44, 209, 172, 1),
@@ -49,7 +59,9 @@ class BottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.add();
+                    },
                     child: Icon(
                       Icons.add_circle_outline,
                       color: Color.fromRGBO(44, 209, 172, 1),

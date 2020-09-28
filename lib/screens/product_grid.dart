@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/widgets/product_item.dart';
 
 class ProductGrid extends StatefulWidget {
   final List<Product> items;
   final void Function(Product) addToCart;
-  const ProductGrid({Key key, this.items, this.addToCart}) : super(key: key);
+  final void Function(int) subFromCart;
+  final Cart cart;
+  const ProductGrid(
+      {Key key, this.items, this.addToCart, this.subFromCart, this.cart})
+      : super(key: key);
   @override
   _ProductGridState createState() => _ProductGridState();
 }
@@ -45,6 +50,8 @@ class _ProductGridState extends State<ProductGrid> {
                         ProductItem(
                           item: item,
                           addToCart: widget.addToCart,
+                          subFromCart: widget.subFromCart,
+                          cart: widget.cart,
                         )
                     ],
                   ),

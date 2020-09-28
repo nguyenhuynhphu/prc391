@@ -6,7 +6,7 @@ import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/models/temp_data.dart';
 import 'package:prc391/screens/order_detail.dart';
-import 'package:prc391/screens/product_item.dart';
+import 'package:prc391/screens/product_grid.dart';
 import 'package:prc391/services/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void addToCart(Product product) {
     cart.addItem(product);
+    cartSink.add(cart);
+  }
+
+  void subFromCart(int id) {
+    cart.subItem(id);
+    cartSink.add(cart);
+  }
+
+  void deleteFromCart(int id) {
+    cart.deleteItem(id);
     cartSink.add(cart);
   }
 
@@ -101,7 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             String name = txtSearch.text;
                             bool flag = productBloc.searchProduct(name, items);
                             //xu ly neu search ko ra
-                            print(flag);
                           },
                           child: Icon(
                             Icons.search,
@@ -122,6 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ProductGrid(
                       items: snapshot.data,
                       addToCart: addToCart,
+                      subFromCart: subFromCart,
+                      cart: cart,
                     );
                   }),
             ),
@@ -129,10 +140,12 @@ class _HomeScreenState extends State<HomeScreen> {
             //--------Button thanh toan
             FlatButton(
                 color: Colors.transparent,
-                onPressed: () =>
-                    Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return OrderDetailScreen();
-                    })),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => OrderDetailScreen(cart, cartStream)));
+                },
                 child: Hero(
                   tag: 'order',
                   child: Material(

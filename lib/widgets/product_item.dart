@@ -1,29 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/screens/productdetail_screen.dart';
 
 class ProductItem extends StatefulWidget {
   final void Function(Product) addToCart;
+  final void Function(int) subFromCart;
+  final Cart cart;
   final Product item;
-  const ProductItem({Key key, this.item, this.addToCart}) : super(key: key);
+  const ProductItem(
+      {Key key, this.item, this.addToCart, this.subFromCart, this.cart})
+      : super(key: key);
   @override
   _ProductItemState createState() => _ProductItemState();
 }
 
 class _ProductItemState extends State<ProductItem> {
+  void addItem() {
+    widget.addToCart(widget.item);
+  }
+
+  void subItem() {
+    widget.subFromCart(widget.item.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 1, bottom: 5, left: 5, right: 5),
       child: InkWell(
         onTap: () {
-          widget.addToCart(widget.item);
+          addItem();
         },
         onLongPress: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ProductDetailScreen(
-                    item: widget.item,
-                  )));
+                  item: widget.item,
+                  addItem: addItem,
+                  subItem: subItem,
+                  cart: widget.cart)));
         },
         child: Container(
           decoration: BoxDecoration(

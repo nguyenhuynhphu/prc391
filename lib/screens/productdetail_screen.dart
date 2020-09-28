@@ -1,14 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
-import 'package:prc391/widgets/bottombar_product_detail.dart';
+import 'package:prc391/widgets/bottombar.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   final Product item;
+  final Stream cartStream;
+  final Cart cart;
+  final void Function() addItem;
+  final void Function() subItem;
 
   const ProductDetailScreen({
     Key key,
     this.item,
+    this.cartStream,
+    this.addItem,
+    this.subItem,
+    this.cart,
   }) : super(key: key);
+
+  @override
+  _ProductDetailScreenState createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  int quantity;
+  @override
+  void initState() {
+    try {
+      quantity = widget.cart.shopping_cart[widget.item.id].quantity;
+    } catch (e) {
+      quantity = 0;
+    }
+    super.initState();
+  }
+
+  void sub() {
+    if (quantity == 0) {
+      return;
+    }
+    int result = quantity - 1;
+
+    setState(() {
+      quantity = result;
+    });
+    widget.subItem();
+  }
+
+  void add() {
+    setState(() {
+      quantity += 1;
+    });
+    widget.addItem();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +86,9 @@ class ProductDetailScreen extends StatelessWidget {
           child: ListView(
             children: [
               Hero(
-                tag: item.image,
+                tag: widget.item.image,
                 child: Image.asset(
-                  item.image,
+                  widget.item.image,
                   height: 150,
                   width: 100,
                   fit: BoxFit.contain,
@@ -57,7 +101,7 @@ class ProductDetailScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    item.name,
+                    widget.item.name,
                     style: TextStyle(
                       fontFamily: 'Varela',
                       fontSize: 22,
@@ -66,7 +110,7 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    item.price.toString(),
+                    widget.item.price.toString() + '\$',
                     style: TextStyle(
                       fontFamily: 'Varela',
                       fontSize: 22,
@@ -80,10 +124,15 @@ class ProductDetailScreen extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                'Description: ' +
-                    '''the cookie is in the cookie jar
-the cookie is now a picture
-the cookie monster tries to steal the cookie but''',
+                'Description: ',
+                style: TextStyle(
+                  fontFamily: 'Varela',
+                  fontSize: 20,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                '''the cookie is in the cookie jar the cookie is now a picture the cookie monster tries to steal the cookie but''',
                 style: TextStyle(
                   fontFamily: 'Varela',
                   fontSize: 18,
@@ -94,8 +143,30 @@ the cookie monster tries to steal the cookie but''',
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        backgroundColor: Color.fromRGBO(44, 209, 172, 1),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 3,
+            ),
+            Icon(Icons.fastfood),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              quantity.toString(),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBarProduct(),
+      bottomNavigationBar: BottomBar(add: add, sub: sub),
     );
   }
 }

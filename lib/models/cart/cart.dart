@@ -8,6 +8,9 @@ class Cart {
   Cart({
     this.shopping_cart,
   });
+  bool isEmpty() {
+    return shopping_cart == null || shopping_cart.isEmpty;
+  }
 
   void addItem(Product product) {
     if (shopping_cart == null) {
@@ -15,26 +18,54 @@ class Cart {
     }
     if (shopping_cart.containsKey(product.id)) {
       shopping_cart.update(product.id, (value) {
-        value.quantity + 1;
+        value.quantity += 1;
         return value;
       });
     } else {
       shopping_cart[product.id] = new Item(product: product, quantity: 1);
     }
+    // totalQuantity();
+    // totalPrice();
+    sumQuantity += 1;
+    total += product.price;
+  }
+
+  void subItem(int id) {
+    if (shopping_cart == null) {
+      return;
+    }
+    if (shopping_cart.containsKey(id)) {
+      bool flag = false;
+      shopping_cart.update(id, (value) {
+        if (value.quantity != 0) {
+          value.quantity -= 1;
+          sumQuantity -= 1;
+          if (value.quantity == 0) {
+            flag = true;
+          }
+          return value;
+        }
+      });
+      if (flag) {
+        deleteItem(id);
+      }
+    }
     totalPrice();
-    totalQuantity();
   }
 
   void editQuantity(id, quantity) {}
 
   void deleteItem(int id) {
     shopping_cart.remove(id);
+    totalPrice();
+    totalQuantity();
   }
 
   void totalPrice() {
     if (shopping_cart == null) {
       shopping_cart = new Map();
     }
+    total = 0;
     shopping_cart.forEach((key, value) {
       total += value.product.price * value.quantity;
     });
@@ -44,26 +75,9 @@ class Cart {
     if (shopping_cart == null) {
       shopping_cart = new Map();
     }
+    sumQuantity = 0;
     shopping_cart.forEach((key, value) {
       sumQuantity += value.quantity;
     });
   }
-
-  factory Cart.fromJson(Map<String, dynamic> json) {
-    return Cart(
-        // id: json['id'],
-        // price: json['price'],
-        // name: json['name'],
-        // desc: json['desc'],
-        // image: json['image']
-        );
-  }
-
-  Map toJson() => {
-        // 'id': id,
-        // 'name': name,
-        // 'price': price,
-        // 'desc': desc,
-        // 'image': image,
-      };
 }

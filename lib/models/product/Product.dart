@@ -46,14 +46,6 @@ class Product {
         result.add(item);
       }
     }
-    showListProduct(result);
     return result == [] ? null : result;
-  }
-
-  void showListProduct(items) {
-    print('-----------');
-    for (Product item in items) {
-      print(item.name + ' - ' + item.price.toString());
-    }
   }
 }

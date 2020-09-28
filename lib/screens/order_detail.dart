@@ -2,14 +2,36 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
+import 'package:prc391/models/cart/item.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  OrderDetailScreen();
+  final Cart cart;
+  final Stream<Cart> cartStream;
+
+  OrderDetailScreen(this.cart, this.cartStream);
+
   @override
   OrderDetailScreenState createState() => OrderDetailScreenState();
 }
 
 class OrderDetailScreenState extends State<OrderDetailScreen> {
+  bool cartIsNotNull;
+  @override
+  void initState() {
+    cartIsNotNull = widget.cart.isEmpty();
+    // print(cartIsNotNull);
+    super.initState();
+  }
+
+  void deleteFromCart(int id) {
+    // widget.deleteFromCart(id);
+    widget.cart.deleteItem(id);
+    setState(() {
+      cartIsNotNull = widget.cart.isEmpty();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,17 +48,30 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   ),
                   child: Stack(
                     children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: ListView(
-                          children: [
-                            _ItemOrder('Cookie choco', 3.9, 1, context),
-                            _ItemOrder('Cookie mint', 3.9, 2, context),
-                            _ItemOrder('Cookie classic', 2, 4, context),
-                          ],
-                        ),
-                      ),
+                      !cartIsNotNull
+                          ? StreamBuilder<Cart>(
+                              stream: widget.cartStream,
+                              initialData: widget.cart,
+                              builder: (context, snapshot) {
+                                return Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ListView(
+                                    children: snapshot.data.shopping_cart.values
+                                        .map<Widget>((e) => _ItemOrder(
+                                            e, deleteFromCart, context))
+                                        .toList(),
+                                  ),
+                                );
+                              })
+                          : Center(
+                              child: Text(
+                              'Nothing in cart',
+                              style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold),
+                            )),
                       Positioned(
                         top: MediaQuery.of(context).size.height - 150,
                         child: Container(
@@ -57,36 +92,46 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Total:',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      '99.9\$',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              StreamBuilder<Cart>(
+                                  stream: widget.cartStream,
+                                  initialData: widget.cart,
+                                  builder: (context, snapshot) {
+                                    return Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Total:',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            widget.cart.total.toString() + '\$',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
                               Divider(
                                 height: 1,
                                 color: Colors.black,
                               ),
                               FlatButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  !cartIsNotNull
+                                      ? print('paymanet')
+                                      : Navigator.pop(context);
+                                },
                                 child: Material(
                                     type: MaterialType.transparency, // likely
                                     child: Container(
@@ -99,27 +144,41 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                                               BorderRadius.circular(5),
                                           color:
                                               Color.fromRGBO(44, 209, 172, 1)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Pay",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 25),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Icon(
-                                            Icons.payment,
-                                            color: Colors.white,
-                                            size: 35,
-                                          ),
-                                        ],
-                                      ),
+                                      child: !cartIsNotNull
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Pay",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 25),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Icon(
+                                                  Icons.payment,
+                                                  color: Colors.white,
+                                                  size: 35,
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Back to store",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
                                     )),
                               ),
                             ],
@@ -130,9 +189,11 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   )),
             )));
   }
+
+  void asd() => widget.cart.shopping_cart.forEach((key, value) {});
 }
 
-Widget _ItemOrder(String name, double price, int quantity, context) {
+Widget _ItemOrder(Item item, Function(int) deleteFromCart, context) {
   return Container(
     margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
     decoration:
@@ -147,7 +208,7 @@ Widget _ItemOrder(String name, double price, int quantity, context) {
           decoration: BoxDecoration(),
           child: Center(
             child: Text(
-              quantity.toString() + 'x',
+              item.quantity.toString() + 'x',
               style: TextStyle(
                   color: Color.fromRGBO(44, 209, 172, 1),
                   fontSize: 24,
@@ -168,7 +229,7 @@ Widget _ItemOrder(String name, double price, int quantity, context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                item.product.name,
                 style: TextStyle(
                     color: Colors.black54,
                     fontSize: 20,
@@ -181,7 +242,7 @@ Widget _ItemOrder(String name, double price, int quantity, context) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'price: ' + price.toString() + '\$',
+                    'price: ' + item.product.price.toString() + '\$',
                     style: TextStyle(color: Colors.black54, fontSize: 18),
                   ),
                 ],
@@ -193,17 +254,27 @@ Widget _ItemOrder(String name, double price, int quantity, context) {
           width: 3,
         ),
         // xoa
+        // FlatButton(
+        //   onPressed: () {
+        //     deleteFromCart(item.product.id);
+        //   },
         Container(
           margin: EdgeInsets.all(10),
           width: 60,
           height: 60,
           decoration: BoxDecoration(color: Colors.redAccent),
-          child: Center(
-              child: Icon(
-            Icons.delete_outline,
-            color: Colors.white,
-          )),
-        )
+          child: FlatButton(
+            onPressed: () {
+              deleteFromCart(item.product.id);
+            },
+            child: Center(
+                child: Icon(
+              Icons.delete_outline,
+              color: Colors.white,
+            )),
+          ),
+        ),
+        // )
       ],
     ),
   );
