@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:prc391/models/product/Product.dart';
+import 'package:prc391/services/api_handler.dart';
 import 'item.dart';
 
 class Cart {
@@ -8,6 +11,7 @@ class Cart {
   Cart({
     this.shopping_cart,
   });
+
   bool isEmpty() {
     return shopping_cart == null || shopping_cart.isEmpty;
   }
@@ -79,5 +83,16 @@ class Cart {
     shopping_cart.forEach((key, value) {
       sumQuantity += value.quantity;
     });
+  }
+
+  bool checkOut() {
+    List result = [];
+    shopping_cart.forEach((key, value) {
+      result.add(shopping_cart[key]);
+    });
+    String temp =
+        "{accountId:" + accountID + ",card:" + jsonEncode(result) + "}";
+    print(temp);
+    return false;
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
-import 'package:prc391/models/temp_data.dart';
 import 'package:prc391/models/user/user.dart';
 import 'package:prc391/screens/order_detail_screen.dart';
 import 'package:prc391/services/api_handler.dart';
@@ -13,7 +12,6 @@ import 'package:prc391/widgets/loading-circle.dart';
 import 'package:prc391/widgets/product_grid.dart';
 import 'package:prc391/services/product_service.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class HomeScreen extends StatefulWidget {
   final User currentUser;
@@ -51,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    items = TEMP_DATA;
     fetchProduct();
     cart = new Cart();
     cartSink.add(cart);
@@ -67,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (view_items == null)
+    if (items == null)
       return Container(
         child: LoadingCircle(50, Colors.black),
       );
@@ -101,8 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TextField(
                       controller: txtSearch,
                       onChanged: (value) {
-                        bool flag =
-                            productBloc.searchProduct(value, view_items);
+                        bool flag = productBloc.searchProduct(value, items);
                         //xu ly neu search ko ra
                       },
                       decoration: InputDecoration(
@@ -222,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
           tmpList.add(Product.fromJson(element));
         });
         setState(() {
+          items = tmpList;
           view_items = tmpList;
         });
       }

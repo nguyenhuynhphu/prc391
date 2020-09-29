@@ -33,10 +33,7 @@ class Product {
 
   Map toJson() => {
         'id': id,
-        'name': name,
         'price': price,
-        'description': description,
-        'image': image,
       };
 
   List<Product> searchProduct(name, items) {

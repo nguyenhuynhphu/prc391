@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/cart/item.dart';
+import 'package:prc391/services/api_handler.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final Cart cart;
@@ -20,7 +20,6 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   void initState() {
     cartIsNotNull = widget.cart.isEmpty();
-    // print(cartIsNotNull);
     super.initState();
   }
 
@@ -129,7 +128,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                               FlatButton(
                                 onPressed: () {
                                   !cartIsNotNull
-                                      ? print('paymanet')
+                                      ? checkOut()
                                       : Navigator.pop(context);
                                 },
                                 child: Material(
@@ -190,7 +189,10 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
             )));
   }
 
-  void asd() => widget.cart.shopping_cart.forEach((key, value) {});
+  Future<int> checkOut() async {
+    widget.cart.checkOut();
+    return 0;
+  }
 }
 
 Widget _ItemOrder(Item item, Function(int) deleteFromCart, context) {

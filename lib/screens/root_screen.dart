@@ -101,6 +101,7 @@ class RootScreenState extends State {
                   auth.getCurrentUser().then((value) async {
                     await fetchUserByEmail(value.email)
                         .then((value) => this.currentUser = value);
+                    accountID = this.currentUser.id.toString();
                     await _firebaseMessaging
                         .getToken()
                         .then((value) => print(value));
