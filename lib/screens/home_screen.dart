@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/models/temp_data.dart';
+import 'package:prc391/models/user/user.dart';
 import 'package:prc391/screens/order_detail_screen.dart';
 import 'package:prc391/services/api_handler.dart';
 import 'package:prc391/widgets/loading-circle.dart';
@@ -15,7 +16,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen();
+  final User currentUser;
+  HomeScreen(this.currentUser);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -139,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   initialData: view_items,
                   builder: (context, snapshot) {
                     return ProductGrid(
+                      currentUser: widget.currentUser,
                       items: snapshot.data,
                       addToCart: addToCart,
                       subFromCart: subFromCart,

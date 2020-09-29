@@ -64,6 +64,6 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.black),
         ),
-        body: HomeScreen());
+        body: HomeScreen(this.widget.currentUser));
   }
 }
