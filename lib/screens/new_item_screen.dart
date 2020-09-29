@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prc391/models/product/Product.dart';
+import 'package:http/http.dart';
+import 'package:prc391/services/api_handler.dart';
 
 class NewItemScreen extends StatefulWidget {
   NewItemScreen();
@@ -221,16 +224,22 @@ class NewItemScreenState extends State<NewItemScreen> {
         FirebaseStorage.instance.ref().child(_image.absolute.path);
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
-
-    storageReference.getDownloadURL().then((fileURL) {
+    storageReference.getDownloadURL().then((fileURL) async {
       product = new Product(
           name: nameController.text,
-          desc: descriptionController.text,
+          description: descriptionController.text,
           price: double.parse(priceController.text),
           image: fileURL,
           id: 0);
-      print("TOOOOOOO ${product.image}");
+      await addProduct(product).whenComplete(() => Navigator.pop(context));
     });
-    print(product);
+  }
+
+  Future<String> addProduct(Product product) async {
+    String url = ApiHandler.POST_PRODUCT;
+    Map<String, String> headers = {"Content-type": "application/json"};
+    String passingJson = jsonEncode(product);
+    Response response = await post(url, headers: headers, body: passingJson);
+    return json.decode(response.body);
   }
 }

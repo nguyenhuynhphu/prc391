@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,12 @@ import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/models/temp_data.dart';
 import 'package:prc391/screens/order_detail_screen.dart';
+import 'package:prc391/services/api_handler.dart';
+import 'package:prc391/widgets/loading-circle.dart';
 import 'package:prc391/widgets/product_grid.dart';
 import 'package:prc391/services/product_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -45,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     items = TEMP_DATA;
-    view_items = items;
+    fetchProduct();
     cart = new Cart();
     cartSink.add(cart);
     super.initState();
@@ -60,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (view_items == null)
+      return Container(
+        child: LoadingCircle(50, Colors.black),
+      );
     return Container(
         decoration: BoxDecoration(color: Colors.white),
         child: ListView(
@@ -90,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TextField(
                       controller: txtSearch,
                       onChanged: (value) {
-                        bool flag = productBloc.searchProduct(value, items);
+                        bool flag =
+                            productBloc.searchProduct(value, view_items);
                         //xu ly neu search ko ra
                       },
                       decoration: InputDecoration(
@@ -198,5 +208,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 //exetension function
-
+  Future<List<Product>> fetchProduct() async {
+    List<Product> tmpList = null;
+    try {
+      final response = await http.get(ApiHandler.GET_PRODUCT);
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        tmpList = new List();
+        data.forEach((element) {
+          tmpList.add(Product.fromJson(element));
+        });
+        setState(() {
+          view_items = tmpList;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

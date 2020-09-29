@@ -42,8 +42,11 @@ class _ProductItemState extends State<ProductItem> {
         },
         child: Container(
           decoration: BoxDecoration(
-              image: new DecorationImage(
-                  image: AssetImage(widget.item.image), fit: BoxFit.contain),
+              image: DecorationImage(
+                  image: widget.item.image != null
+                      ? NetworkImage(widget.item.image)
+                      : AssetImage("images/cookiechoco.jpg"),
+                  fit: BoxFit.cover),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(

@@ -4,21 +4,21 @@ class Product {
   int id;
   String name;
   double price;
-  String desc;
+  String description;
   String image;
 
   Product({
     this.id,
     this.name,
     this.price,
-    this.desc,
+    this.description,
     this.image,
   });
 
   Product.id({
     this.name,
     this.price,
-    this.desc,
+    this.description,
     this.image,
   });
 
@@ -27,7 +27,7 @@ class Product {
         id: json['id'],
         price: json['price'],
         name: json['name'],
-        desc: json['desc'],
+        description: json['desc'],
         image: json['image']);
   }
 
@@ -35,7 +35,7 @@ class Product {
         'id': id,
         'name': name,
         'price': price,
-        'desc': desc,
+        'description': description,
         'image': image,
       };
 
