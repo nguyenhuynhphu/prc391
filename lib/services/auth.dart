@@ -15,19 +15,10 @@ abstract class BaseAuth {
 class Auth implements BaseAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // UserRepository userRepository = new UserRepository();
-
   @override
   Stream<String> get onAuthStateChanged {
     return _auth.authStateChanges().map((user) => user?.uid);
   }
-
-  // @override
-  // Future<FirebaseUser> getCurrentUser() async {
-  //   FirebaseUser user = await _auth.currentUser();
-  //   var tmp = user.providerData.toList()[0];
-  //   return user;
-  // }
 
   User currentUser;
   @override
@@ -37,9 +28,6 @@ class Auth implements BaseAuth {
           .signInWithEmailAndPassword(
               email: email.toString().trim(), password: password)
           .then((value) {});
-      // userRepository
-      //     .fetchUserByEmail(email.toString().trim())
-      //     .then((value) => currentUser = value);
     } catch (e) {
       return e.toString();
     }
@@ -52,13 +40,13 @@ class Auth implements BaseAuth {
 
   @override
   Future<String> signUp(String email, String password) async {
-    var result = await _auth.createUserWithEmailAndPassword(
+    FirebaseAuth tempAuth = FirebaseAuth.instance;
+    var result = await tempAuth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 
   @override
-  Future<FirebaseUser> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<User> getCurrentUser() async {
+    return _auth.currentUser;
   }
 }

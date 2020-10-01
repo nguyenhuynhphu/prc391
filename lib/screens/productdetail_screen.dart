@@ -1,11 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:prc391/models/cart/cart.dart';
+import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/widgets/bottombar.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  final image, price, name;
+class ProductDetailScreen extends StatefulWidget {
+  final Product item;
+  final Stream cartStream;
+  final Cart cart;
+  final void Function() addItem;
+  final void Function() subItem;
 
-  const ProductDetailScreen({Key key, this.image, this.price, this.name})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key key,
+    this.item,
+    this.cartStream,
+    this.addItem,
+    this.subItem,
+    this.cart,
+  }) : super(key: key);
+
+  @override
+  _ProductDetailScreenState createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  int quantity;
+  @override
+  void initState() {
+    try {
+      quantity = widget.cart.shopping_cart[widget.item.id].quantity;
+    } catch (e) {
+      quantity = 0;
+    }
+    super.initState();
+  }
+
+  void sub() {
+    if (quantity == 0) {
+      return;
+    }
+    int result = quantity - 1;
+
+    setState(() {
+      quantity = result;
+    });
+    widget.subItem();
+  }
+
+  void add() {
+    setState(() {
+      quantity += 1;
+    });
+    widget.addItem();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,36 +81,66 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontFamily: 'Varela',
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(44, 209, 172, 1),
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: ListView(
+            children: [
+              Hero(
+                tag: widget.item.image,
+                child: Image.asset(
+                  widget.item.image,
+                  height: 150,
+                  width: 100,
+                  fit: BoxFit.contain,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Hero(
-              tag: image,
-              child: Image.asset(
-                image,
-                height: 150,
-                width: 100,
-                fit: BoxFit.contain,
+              SizedBox(
+                height: 15,
               ),
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.item.name,
+                    style: TextStyle(
+                      fontFamily: 'Varela',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    widget.item.price.toString() + '\$',
+                    style: TextStyle(
+                      fontFamily: 'Varela',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Description: ',
+                style: TextStyle(
+                  fontFamily: 'Varela',
+                  fontSize: 20,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                '''the cookie is in the cookie jar the cookie is now a picture the cookie monster tries to steal the cookie but''',
+                style: TextStyle(
+                  fontFamily: 'Varela',
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -71,16 +148,25 @@ class ProductDetailScreen extends StatelessWidget {
           Navigator.of(context).pop();
         },
         backgroundColor: Color.fromRGBO(44, 209, 172, 1),
-        child: Column(children: [
-          Text(
-            "2",
-            style: TextStyle(fontSize: 19),
-          ),
-          Icon(Icons.fastfood)
-        ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 3,
+            ),
+            Icon(Icons.fastfood),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              quantity.toString(),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(add: add, sub: sub),
     );
   }
 }

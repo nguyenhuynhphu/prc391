@@ -5,9 +5,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prc391/login/login_screen.dart';
+import 'package:prc391/screens/login_screen.dart';
 import 'package:prc391/models/user/user.dart';
 import 'package:prc391/screens/main_screen.dart';
+import 'package:prc391/services/api_handler.dart';
 import 'package:prc391/services/auth.dart';
 import 'package:prc391/widgets/loading-circle.dart';
 
@@ -62,30 +63,9 @@ class RootScreenState extends State {
   //   return "OK";
   // }
 
-  Future<User> fetchUserByEmail(String email) async {
-    User user;
-    final response = await http
-        .get('https://swdapi.azurewebsites.net/api/user/CurrentUser/$email');
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      user = User.fromJson(data[0]);
-    }
-    return user;
-  }
-
   Future<String> signIn(String email, String password) async {
     try {
       auth.signIn(email, password);
-      // userRepository
-      //     .fetchUserByEmail(email.toString().trim())
-      //     .then((value) => currentUser = value);
-      setState(() {
-        currentUser = new User(
-            id: 1,
-            email: "phunh985@gmail.com",
-            name: "Nguyen Huynh Phu",
-            roleId: 1);
-      });
     } catch (e) {
       return e.toString();
     }
@@ -94,9 +74,6 @@ class RootScreenState extends State {
   Future<String> signOut() async {
     try {
       auth.signOut();
-      // userRepository
-      //     .fetchUserByEmail(email.toString().trim())
-      //     .then((value) => currentUser = value);
     } catch (e) {
       return e.toString();
     }
@@ -110,15 +87,7 @@ class RootScreenState extends State {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasData) {
-                  String email;
-                  Auth auth = new Auth();
-                  // auth.getCurrentUser().then((value1) =>
-                  //     fetchUserByEmail(value1.email).then((value2) =>
-                  //         _firebaseMessaging.getToken().then((value3) =>
-                  //             _updateToken(value2.id.toString(), value3))));
-
-                  //return MainScreen(auth.signOut);
-                  return MainScreen(signOut, this.currentUser);
+                  return MainScreen(signOut);
                 } else {
                   return LoginScreen(signIn);
                 }
@@ -127,6 +96,7 @@ class RootScreenState extends State {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 alignment: Alignment.center,
+                decoration: BoxDecoration(color: Colors.white),
                 child: LoadingCircle(50, Colors.black),
               );
             }));
