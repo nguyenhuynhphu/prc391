@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prc391/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Future<String> Function(String, String) signIn;
