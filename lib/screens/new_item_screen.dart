@@ -220,6 +220,7 @@ class NewItemScreenState extends State<NewItemScreen> {
 
   saveProduct() async {
     var product;
+    
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child(_image.absolute.path);
     StorageUploadTask uploadTask = storageReference.putFile(_image);

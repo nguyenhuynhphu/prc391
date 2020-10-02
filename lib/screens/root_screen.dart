@@ -63,16 +63,6 @@ class RootScreenState extends State {
   //   return "OK";
   // }
 
-  Future<User> fetchUserByEmail(String email) async {
-    User user;
-    final response = await http.get('${ApiHandler.GET_USER_BY_EMAIL}$email');
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      user = User.fromJson(data);
-    }
-    return user;
-  }
-
   Future<String> signIn(String email, String password) async {
     try {
       auth.signIn(email, password);
@@ -97,16 +87,7 @@ class RootScreenState extends State {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasData) {
-                  Auth auth = new Auth();
-                  auth.getCurrentUser().then((value) async {
-                    await fetchUserByEmail(value.email)
-                        .then((value) => this.currentUser = value);
-                    accountID = this.currentUser.id.toString();
-                    await _firebaseMessaging
-                        .getToken()
-                        .then((value) => print(value));
-                  });
-                  return MainScreen(signOut, this.currentUser);
+                  return MainScreen(signOut);
                 } else {
                   return LoginScreen(signIn);
                 }
@@ -115,6 +96,7 @@ class RootScreenState extends State {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 alignment: Alignment.center,
+                decoration: BoxDecoration(color: Colors.white),
                 child: LoadingCircle(50, Colors.black),
               );
             }));

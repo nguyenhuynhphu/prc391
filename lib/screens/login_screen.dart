@@ -17,8 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    emailController.text = "admin@admin.com";
-    passwordController.text = "123456";
     super.initState();
   }
 
@@ -114,32 +112,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         size: 20,
                       )),
                 )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ButtonTheme(
-                    buttonColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    minWidth: 200.0,
-                    height: 40,
-                    hoverColor: Colors.transparent,
-                    child: RaisedButton(
-                        color: Colors.white,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(4),
-                            side: BorderSide(color: Colors.black)),
-                        onPressed: () async {
-                          await widget
-                              .signIn(
-                                  emailController.text, passwordController.text)
-                              .whenComplete(() => setState(() {
-                                    isLogin = false;
-                                  }));
-                        },
-                        child: Text('Login',
-                            style: TextStyle(color: Colors.black))))
-              ],
-            ),
+            ButtonTheme(
+                buttonColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                minWidth: 200.0,
+                height: 40,
+                hoverColor: Colors.transparent,
+                child: RaisedButton(
+                    color: Colors.white,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(4),
+                        side: BorderSide(color: Colors.black)),
+                    onPressed: () async {
+                      await widget
+                          .signIn(emailController.text, passwordController.text)
+                          .whenComplete(() => setState(() {
+                                isLogin = false;
+                              }));
+                    },
+                    child:
+                        Text('Login', style: TextStyle(color: Colors.black)))),
           ],
         ),
       ),

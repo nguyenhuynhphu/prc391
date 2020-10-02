@@ -40,7 +40,8 @@ class Auth implements BaseAuth {
 
   @override
   Future<String> signUp(String email, String password) async {
-    var result = await _auth.createUserWithEmailAndPassword(
+    FirebaseAuth tempAuth = FirebaseAuth.instance;
+    var result = await tempAuth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 
