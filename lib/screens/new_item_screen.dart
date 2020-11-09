@@ -10,13 +10,16 @@ import 'package:http/http.dart';
 import 'package:prc391/services/api_handler.dart';
 
 class NewItemScreen extends StatefulWidget {
-  NewItemScreen();
+  final Product product;
+  NewItemScreen(this.product);
+
   @override
   NewItemScreenState createState() => NewItemScreenState();
 }
 
 class NewItemScreenState extends State<NewItemScreen> {
   File _image;
+
   final nameController = TextEditingController();
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -24,6 +27,11 @@ class NewItemScreenState extends State<NewItemScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.product != null) {
+      nameController.text = widget.product.name;
+      priceController.text = widget.product.price.toString();
+      descriptionController.text = widget.product.description;
+    }
   }
 
   @override
@@ -167,6 +175,21 @@ class NewItemScreenState extends State<NewItemScreen> {
                       ],
                     ),
                   ),
+                  widget.product != null
+                      ? Container(
+                          margin: EdgeInsets.only(
+                              left: 10, right: 10, bottom: 15, top: 5),
+                          decoration: new BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            onPressed: () => deleteProduct(widget.product.id),
+                            color: Colors.white,
+                            icon: Icon(Icons.delete),
+                          ),
+                        )
+                      : Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,29 +234,48 @@ class NewItemScreenState extends State<NewItemScreen> {
         fit: BoxFit.fill,
       );
     } else {
-      return Image.asset(
-        'images/no_image.png',
-        fit: BoxFit.fill,
-      );
+      if (widget.product != null) {
+        return Image.network(
+          widget.product.image,
+          fit: BoxFit.fill,
+        );
+      } else {
+        return Image.asset(
+          'images/no_image.png',
+          fit: BoxFit.fill,
+        );
+      }
     }
   }
 
   saveProduct() async {
     var product;
-    
+
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child(_image.absolute.path);
     StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    storageReference.getDownloadURL().then((fileURL) async {
-      product = new Product(
-          name: nameController.text,
-          description: descriptionController.text,
-          price: double.parse(priceController.text),
-          image: fileURL,
-          id: 0);
-      await addProduct(product).whenComplete(() => Navigator.pop(context));
-    });
+    await uploadTask.onComplete.whenComplete(
+        () => storageReference.getDownloadURL().then((fileURL) async {
+              if (widget.product != null) {
+                product = new Product(
+                    name: nameController.text,
+                    description: descriptionController.text,
+                    price: double.parse(priceController.text),
+                    image: fileURL,
+                    id: widget.product.id);
+                await updateProduct(product)
+                    .whenComplete(() => Navigator.pop(context));
+              } else {
+                product = new Product(
+                    name: nameController.text,
+                    description: descriptionController.text,
+                    price: double.parse(priceController.text),
+                    image: fileURL,
+                    id: 0);
+                await addProduct(product)
+                    .whenComplete(() => Navigator.pop(context));
+              }
+            }));
   }
 
   Future<String> addProduct(Product product) async {
@@ -241,6 +283,19 @@ class NewItemScreenState extends State<NewItemScreen> {
     Map<String, String> headers = {"Content-type": "application/json"};
     String passingJson = jsonEncode(product);
     Response response = await post(url, headers: headers, body: passingJson);
-    return json.decode(response.body);
+  }
+
+  Future<String> updateProduct(Product product) async {
+    String url = ApiHandler.PUT_PRODUCT;
+    Map<String, String> headers = {"Content-type": "application/json"};
+    String passingJson = jsonEncode(product);
+    Response response = await put(url, headers: headers, body: passingJson);
+  }
+
+  Future<String> deleteProduct(int id) async {
+    String url = ApiHandler.DELETE_PRODUCT + "/$id";
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Response response = await delete(url, headers: headers);
+    Navigator.pop(context);
   }
 }

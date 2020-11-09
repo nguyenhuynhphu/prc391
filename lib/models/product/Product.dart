@@ -33,6 +33,9 @@ class Product {
 
   Map toJson() => {
         'id': id,
+        'name': name,
+        'description': description,
+        'image': image,
         'price': price,
       };
 

@@ -6,6 +6,7 @@ import 'package:prc391/widgets/product_item.dart';
 
 class ProductGrid extends StatefulWidget {
   final User currentUser;
+  final void Function() refresh;
   final List<Product> items;
   final void Function(Product) addToCart;
   final void Function(int) subFromCart;
@@ -16,6 +17,7 @@ class ProductGrid extends StatefulWidget {
       this.addToCart,
       this.subFromCart,
       this.cart,
+      this.refresh,
       this.currentUser})
       : super(key: key);
   @override
@@ -55,11 +57,12 @@ class _ProductGridState extends State<ProductGrid> {
                       for (Product item in widget.items)
                         // _productItem(item, widget.addToCart, context)
                         ProductItem(
-                          item: item,
-                          addToCart: widget.addToCart,
-                          subFromCart: widget.subFromCart,
-                          cart: widget.cart,
-                        )
+                            item: item,
+                            addToCart: widget.addToCart,
+                            subFromCart: widget.subFromCart,
+                            cart: widget.cart,
+                            refresh: widget.refresh,
+                            currentUser: widget.currentUser)
                     ],
                   ),
           ),

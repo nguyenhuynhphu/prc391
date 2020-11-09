@@ -70,6 +70,9 @@ flutter:
     - family: Varela
       fonts:
         - asset: fonts/Varela-Regular.ttf
+    - family: DancingScript
+      fonts:
+        - asset: fonts/DancingScript-Medium.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

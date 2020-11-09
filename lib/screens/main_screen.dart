@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final void Function() onSignOut;
   User currentUser;
   _MainScreenState(this.onSignOut);
-
+  bool refresh;
   @override
   void initState() {
     super.initState();
@@ -39,7 +39,6 @@ class _MainScreenState extends State<MainScreen> {
         child: LoadingCircle(50, Colors.black),
       );
     } else {
-      print(this.currentUser.email);
       return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -58,9 +57,10 @@ class _MainScreenState extends State<MainScreen> {
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: IconButton(
-                            onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => NewItemScreen())),
+                            onPressed: () => Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => NewItemScreen(null)))
+                                .whenComplete(() => reloadScreen()),
                             icon: Icon(Icons.add),
                             iconSize: 34,
                             color: Color.fromRGBO(68, 78, 94, 1),
@@ -97,28 +97,28 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: Colors.white,
             iconTheme: new IconThemeData(color: Colors.black),
           ),
-          body: HomeScreen(currentUser));
+          body: HomeScreen(this.currentUser, reloadScreen));
     }
   }
 
-  Future<User> fetchUserByEmail() async {
-    print("Fetching");
+  reloadScreen() {
+    setState(() {
+      this.currentUser = null;
+    });
+    fetchUserByEmail();
+  }
 
+  Future<User> fetchUserByEmail() async {
     Auth auth = new Auth();
     auth.getCurrentUser().then((value) async {
       await http
           .get('${ApiHandler.GET_USER_BY_EMAIL}${value.email}')
-          .then((value) {
-        if (value.statusCode == 200) {
-          var data = json.decode(value.body);
-          this.setState(() {
-            this.currentUser = User.fromJson(data);
-          });
-        }
+          .then((value2) {
+        var data = json.decode(value2.body);
+        this.setState(() {
+          this.currentUser = User.fromJson(data);
+        });
       });
-    }).whenComplete(() {
-      print("DOne");
-      print(this.currentUser.email);
-    }).whenComplete(() => setState(() {}));
+    });
   }
 }

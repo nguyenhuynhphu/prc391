@@ -15,7 +15,8 @@ import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final User currentUser;
-  HomeScreen(this.currentUser);
+  final void Function() refresh;
+  HomeScreen(this.currentUser, this.refresh);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -64,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("RENDER");
     if (items == null)
       return Container(
         child: LoadingCircle(50, Colors.black),
@@ -137,12 +139,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   initialData: view_items,
                   builder: (context, snapshot) {
                     return ProductGrid(
-                      currentUser: widget.currentUser,
-                      items: snapshot.data,
-                      addToCart: addToCart,
-                      subFromCart: subFromCart,
-                      cart: cart,
-                    );
+                        currentUser: widget.currentUser,
+                        items: snapshot.data,
+                        addToCart: addToCart,
+                        subFromCart: subFromCart,
+                        cart: cart,
+                        refresh: widget.refresh);
                   }),
             ),
 

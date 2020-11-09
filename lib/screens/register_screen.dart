@@ -27,7 +27,7 @@ class RegisterScreenState extends State<RegisterScreen> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.only(left: 50, right: 50),
-      decoration: BoxDecoration(color: Colors.black87),
+      decoration: BoxDecoration(color: Color.fromRGBO(44, 209, 172, 1)),
       child: Align(
         alignment: Alignment.center,
         child: Column(
@@ -37,12 +37,12 @@ class RegisterScreenState extends State<RegisterScreen> {
             Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("New",
+                    Text("New User",
                         style: TextStyle(
-                            fontSize: 34,
-                            fontFamily: "Roboto",
+                            fontSize: 42,
+                            fontFamily: "DancingScript",
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                             shadows: [
@@ -52,13 +52,6 @@ class RegisterScreenState extends State<RegisterScreen> {
                                 color: Colors.black,
                               ),
                             ])),
-                    Text("User",
-                        style: TextStyle(
-                            fontSize: 38,
-                            fontFamily: "Roboto",
-                            color: Colors.orangeAccent,
-                            fontWeight: FontWeight.w400,
-                            shadows: [])),
                   ],
                 )),
             Container(
@@ -70,7 +63,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'User Name',
-                    hintStyle: TextStyle(color: Colors.white, fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
                     contentPadding: EdgeInsets.only(left: 15),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -95,7 +88,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'Email',
-                    hintStyle: TextStyle(color: Colors.white, fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
                     contentPadding: EdgeInsets.only(left: 15),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -122,7 +115,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    hintStyle: TextStyle(color: Colors.white, fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
                     contentPadding: EdgeInsets.only(left: 15),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -140,7 +133,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                 )),
             Container(
                 height: 50,
-                margin: EdgeInsets.only(bottom: 10),
+                margin: EdgeInsets.only(bottom: 15),
                 child: TextFormField(
                   controller: confirmPasswordController,
                   textAlignVertical: TextAlignVertical.center,
@@ -148,7 +141,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'Confirm Password',
-                    hintStyle: TextStyle(color: Colors.white, fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
                     contentPadding: EdgeInsets.only(left: 15),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -173,13 +166,15 @@ class RegisterScreenState extends State<RegisterScreen> {
                 child: RaisedButton(
                     color: Colors.white,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(4),
-                        side: BorderSide(color: Colors.black)),
+                      borderRadius: new BorderRadius.circular(4),
+                    ),
                     onPressed: () async {
                       registerAccount();
                     },
                     child: Text('Sign Up',
-                        style: TextStyle(color: Colors.black, fontSize: 12)))),
+                        style: TextStyle(
+                            color: Color.fromRGBO(44, 209, 172, 1),
+                            fontSize: 14)))),
           ],
         ),
       ),
@@ -194,7 +189,6 @@ class RegisterScreenState extends State<RegisterScreen> {
     if (password == confirmPassword) {
       Auth auth = new Auth();
       try {
-        print("$email --- $password");
         await auth.signUp(email, password).whenComplete(() async {
           User tmp = new User(
               deviceToken: null,

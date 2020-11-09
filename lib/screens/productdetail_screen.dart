@@ -87,7 +87,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Hero(
                 tag: widget.item.image,
-                child: Image.asset(
+                child: Image.network(
                   widget.item.image,
                   height: 150,
                   width: 100,

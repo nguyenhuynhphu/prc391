@@ -23,12 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.only(left: 50, right: 50, top: 200),
-      decoration: BoxDecoration(color: Colors.black87),
-      child: SingleChildScrollView(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.only(left: 50, right: 50, top: 0),
+        decoration: BoxDecoration(color: Color.fromRGBO(44, 209, 172, 1)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,28 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Sign",
+                    Text("Bobahub",
                         style: TextStyle(
-                            fontSize: 34,
-                            fontFamily: "Roboto",
+                            fontSize: 48,
+                            fontFamily: "DancingScript",
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                             shadows: [
                               Shadow(
                                 offset: Offset(1, 1),
-                                blurRadius: 3.0,
+                                blurRadius: 1.0,
                                 color: Colors.black,
                               ),
                             ])),
-                    Text("In",
-                        style: TextStyle(
-                            fontSize: 38,
-                            fontFamily: "Roboto",
-                            color: Colors.orangeAccent,
-                            fontWeight: FontWeight.w400,
-                            shadows: [])),
                   ],
                 )),
             Container(
@@ -68,49 +60,48 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlignVertical: TextAlignVertical.center,
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
+                    hintText: 'User Name',
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    contentPadding: EdgeInsets.only(left: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
                       ),
-                      //border: Border.all(color: Colors.white, width: 1),
-                      prefixIcon: Icon(Icons.account_box, color: Colors.white)),
+                    ),
+                  ),
                 )),
             Container(
+                margin: new EdgeInsets.only(bottom: 10),
                 height: 50,
-                margin: EdgeInsets.only(bottom: 10),
                 child: TextFormField(
                   controller: passwordController,
                   textAlignVertical: TextAlignVertical.center,
                   obscureText: true,
                   style: TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(14),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.lock,
+                    hintText: 'Password',
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    contentPadding: EdgeInsets.only(left: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
                         color: Colors.white,
-                        size: 20,
-                      )),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 )),
             ButtonTheme(
                 buttonColor: Colors.transparent,
@@ -121,8 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: RaisedButton(
                     color: Colors.white,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(4),
-                        side: BorderSide(color: Colors.black)),
+                      borderRadius: new BorderRadius.circular(4),
+                    ),
                     onPressed: () async {
                       await widget
                           .signIn(emailController.text, passwordController.text)
@@ -130,11 +121,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isLogin = false;
                               }));
                     },
-                    child:
-                        Text('Login', style: TextStyle(color: Colors.black)))),
+                    child: Text('Login',
+                        style: TextStyle(
+                            color: Color.fromRGBO(44, 209, 172, 1))))),
           ],
         ),
       ),
-    ));
+    );
   }
 }
