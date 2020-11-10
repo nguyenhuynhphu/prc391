@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/services/api_handler.dart';
+import 'package:prc391/services/notify.dart';
 import 'item.dart';
 
 class Cart {
@@ -100,14 +101,13 @@ class Cart {
         <String, dynamic>{"accountId": ApiHandler.accountID, "card": result});
     try {
       Map<String, String> headers = {"Content-type": "application/json"};
-
       http.Response response =
           await http.post(ApiHandler.POST_ORDER, headers: headers, body: body);
       if (response.statusCode == 200) {
-        print('OK');
+        PushNotificationService.pushNotification(total.toString());
+        cleanCart();
         return true;
       } else {
-        print('WRONG');
         return false;
       }
     } catch (e) {

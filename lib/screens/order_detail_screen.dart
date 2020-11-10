@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/cart/item.dart';
-import 'package:prc391/services/notify.dart';
 import 'package:prc391/widgets/loading-circle.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class OrderDetailScreen extends StatefulWidget {
 class OrderDetailScreenState extends State<OrderDetailScreen> {
   bool cartIsNotNull;
   bool isWait;
-
   @override
   void initState() {
     cartIsNotNull = widget.cart.isEmpty();
@@ -58,7 +56,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                                 return Container(
                                   margin: EdgeInsets.only(top: 20),
                                   height:
-                                      MediaQuery.of(context).size.height - 155,
+                                      MediaQuery.of(context).size.height - 150,
                                   width: MediaQuery.of(context).size.width,
                                   child: ListView(
                                     children: snapshot.data.shopping_cart.values
@@ -77,7 +75,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                                   fontWeight: FontWeight.bold),
                             )),
                       Positioned(
-                        top: MediaQuery.of(context).size.height - 150,
+                        top: MediaQuery.of(context).size.height - 130,
                         child: Container(
                           padding: EdgeInsets.all(10),
                           margin: EdgeInsets.only(left: 10, right: 10),
@@ -133,7 +131,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                               FlatButton(
                                 onPressed: () {
                                   !cartIsNotNull
-                                      ? checkOut(widget.cart.total.toString())
+                                      ? checkOut()
                                       : Navigator.pop(context);
                                 },
                                 child: Material(
@@ -197,16 +195,16 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
             )));
   }
 
-  Future<int> checkOut(String total) async {
+  Future<int> checkOut() async {
     setState(() {
       isWait = true;
     });
-    widget.cart.checkOut().then((value) => {
-          if (value) {PushNotificationService.pushNotification(total)}
-        });
+    await widget.cart.checkOut();
     setState(() {
       isWait = false;
+      cartIsNotNull = widget.cart.isEmpty();
     });
+
     return 0;
   }
 }

@@ -77,7 +77,9 @@ class _ProductItemState extends State<ProductItem> {
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15))),
-            margin: EdgeInsets.only(top: 160),
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height - 450,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -86,7 +88,7 @@ class _ProductItemState extends State<ProductItem> {
                   style: TextStyle(
                       color: Color.fromRGBO(44, 209, 172, 1),
                       fontFamily: 'Varela',
-                      fontSize: 20),
+                      fontSize: 18),
                 ),
                 Text(
                   widget.item.name,
@@ -97,7 +99,7 @@ class _ProductItemState extends State<ProductItem> {
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 10,
                 ),
               ],
             ),

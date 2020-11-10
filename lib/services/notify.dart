@@ -16,7 +16,7 @@ class PushNotificationService {
       const IosNotificationSettings(
           sound: true, badge: true, alert: true, provisional: false),
     );
-    await http.post(
+    http.Response res = await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -38,6 +38,8 @@ class PushNotificationService {
         },
       ),
     );
+    print(token);
+    print(res);
   }
 
   //update token when login on new device
@@ -62,6 +64,7 @@ class PushNotificationService {
 
   static Future<void> pushNotification(String total) async {
     try {
+      print(total);
       //get list token
       Map<String, String> headers = {"Content-type": "application/json"};
       http.Response response =
@@ -71,8 +74,9 @@ class PushNotificationService {
         //check token
         if (token != null && token.toString().trim().length != 0) {
           //push notify
-          sendAndRetrieveMessage(
-              token, "Order Notification", "Get a order \nTotal: $total");
+          print(token);
+          await sendAndRetrieveMessage(token.toString(), "BobaHub Notification",
+              "Get a order \nTotal: $total");
         }
       }
     } catch (e) {

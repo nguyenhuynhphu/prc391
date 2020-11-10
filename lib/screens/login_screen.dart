@@ -124,8 +124,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           .signIn(emailController.text, passwordController.text)
                           .whenComplete(() => setState(() {
                                 isLogin = false;
-                                isWait = false;
+                               
                               }));
+                        setState(() {
+                        isWait = false;
+                      });
                     },
                     child: isWait
                         ? LoadingCircle(30, Color.fromRGBO(44, 209, 172, 1))
