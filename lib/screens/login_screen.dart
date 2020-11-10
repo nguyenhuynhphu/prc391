@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prc391/widgets/loading-circle.dart';
 
 class LoginScreen extends StatefulWidget {
   final Future<String> Function(String, String) signIn;
@@ -14,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLogin = false;
+  bool isWait = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -115,15 +117,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: new BorderRadius.circular(4),
                     ),
                     onPressed: () async {
+                      setState(() {
+                        isWait = true;
+                      });
                       await widget
                           .signIn(emailController.text, passwordController.text)
                           .whenComplete(() => setState(() {
                                 isLogin = false;
+                                isWait = false;
                               }));
                     },
-                    child: Text('Login',
-                        style: TextStyle(
-                            color: Color.fromRGBO(44, 209, 172, 1))))),
+                    child: isWait
+                        ? LoadingCircle(30, Color.fromRGBO(44, 209, 172, 1))
+                        : Text('Login',
+                            style: TextStyle(
+                                color: Color.fromRGBO(44, 209, 172, 1))))),
           ],
         ),
       ),

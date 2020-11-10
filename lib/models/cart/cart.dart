@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 
 import 'package:prc391/models/product/Product.dart';
 import 'package:prc391/services/api_handler.dart';
@@ -11,6 +13,12 @@ class Cart {
   Cart({
     this.shopping_cart,
   });
+
+  void cleanCart() {
+    shopping_cart.clear();
+    total = 0;
+    sumQuantity = 0;
+  }
 
   bool isEmpty() {
     return shopping_cart == null || shopping_cart.isEmpty;
@@ -28,8 +36,6 @@ class Cart {
     } else {
       shopping_cart[product.id] = new Item(product: product, quantity: 1);
     }
-    // totalQuantity();
-    // totalPrice();
     sumQuantity += 1;
     total += product.price;
   }
@@ -85,14 +91,28 @@ class Cart {
     });
   }
 
-  bool checkOut() {
+  Future<bool> checkOut() async {
     List result = [];
     shopping_cart.forEach((key, value) {
       result.add(shopping_cart[key]);
     });
-    String temp =
-        "{accountId:" + accountID + ",card:" + jsonEncode(result) + "}";
-    print(temp);
+    String body = jsonEncode(
+        <String, dynamic>{"accountId": ApiHandler.accountID, "card": result});
+    try {
+      Map<String, String> headers = {"Content-type": "application/json"};
+
+      http.Response response =
+          await http.post(ApiHandler.POST_ORDER, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        print('OK');
+        return true;
+      } else {
+        print('WRONG');
+        return false;
+      }
+    } catch (e) {
+      print("ERRRR=" + e);
+    }
     return false;
   }
 }

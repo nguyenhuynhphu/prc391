@@ -27,7 +27,9 @@ class Auth implements BaseAuth {
       var result = await _auth
           .signInWithEmailAndPassword(
               email: email.toString().trim(), password: password)
-          .then((value) {});
+          .then((value) {
+        print("login: " + value.toString());
+      });
     } catch (e) {
       return e.toString();
     }

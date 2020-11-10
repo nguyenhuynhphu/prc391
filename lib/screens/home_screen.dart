@@ -65,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("RENDER");
     if (items == null)
       return Container(
         child: LoadingCircle(50, Colors.black),

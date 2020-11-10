@@ -2,14 +2,13 @@
 
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prc391/screens/login_screen.dart';
 import 'package:prc391/models/user/user.dart';
 import 'package:prc391/screens/main_screen.dart';
-import 'package:prc391/services/api_handler.dart';
 import 'package:prc391/services/auth.dart';
+import 'package:prc391/services/notify.dart';
 import 'package:prc391/widgets/loading-circle.dart';
 
 class RootScreen extends StatefulWidget {
@@ -22,6 +21,7 @@ class RootScreenState extends State {
   // UserRepository userRepository = new UserRepository();
   User currentUser;
   bool onMessage = false;
+  String token;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
@@ -42,6 +42,7 @@ class RootScreenState extends State {
       },
     );
     _firebaseMessaging.onTokenRefresh.listen((data) {
+      token = data;
       print('Refresh Token: $data');
     }, onDone: () => print('Refresh Token Done'));
   }
@@ -52,20 +53,10 @@ class RootScreenState extends State {
     });
   }
 
-  // @override
-  // Future<String> _updateToken(String id, String token) async {
-  //   String url =
-  //       'https://swdapi.azurewebsites.net/api/Campaign/tokenOfUser/$id/$token';
-  //   Map<String, String> headers = {"Content-type": "application/json"};
-  //   Response response = await put(url, headers: headers, body: token);
-  //   int statusCode = response.statusCode;
-  //   String body = response.body;
-  //   return "OK";
-  // }
-
   Future<String> signIn(String email, String password) async {
     try {
       auth.signIn(email, password);
+      PushNotificationService.updateToken(email, token);
     } catch (e) {
       return e.toString();
     }

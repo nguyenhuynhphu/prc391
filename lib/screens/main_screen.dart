@@ -115,6 +115,7 @@ class _MainScreenState extends State<MainScreen> {
           .get('${ApiHandler.GET_USER_BY_EMAIL}${value.email}')
           .then((value2) {
         var data = json.decode(value2.body);
+        ApiHandler.accountID = data["id"].toString();
         this.setState(() {
           this.currentUser = User.fromJson(data);
         });

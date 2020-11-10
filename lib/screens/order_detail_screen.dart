@@ -1,9 +1,9 @@
-import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prc391/models/cart/cart.dart';
 import 'package:prc391/models/cart/item.dart';
-import 'package:prc391/services/api_handler.dart';
+import 'package:prc391/services/notify.dart';
+import 'package:prc391/widgets/loading-circle.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final Cart cart;
@@ -17,9 +17,12 @@ class OrderDetailScreen extends StatefulWidget {
 
 class OrderDetailScreenState extends State<OrderDetailScreen> {
   bool cartIsNotNull;
+  bool isWait;
+
   @override
   void initState() {
     cartIsNotNull = widget.cart.isEmpty();
+    isWait = false;
     super.initState();
   }
 
@@ -53,7 +56,9 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                               initialData: widget.cart,
                               builder: (context, snapshot) {
                                 return Container(
-                                  height: MediaQuery.of(context).size.height,
+                                  margin: EdgeInsets.only(top: 20),
+                                  height:
+                                      MediaQuery.of(context).size.height - 155,
                                   width: MediaQuery.of(context).size.width,
                                   child: ListView(
                                     children: snapshot.data.shopping_cart.values
@@ -128,7 +133,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                               FlatButton(
                                 onPressed: () {
                                   !cartIsNotNull
-                                      ? checkOut()
+                                      ? checkOut(widget.cart.total.toString())
                                       : Navigator.pop(context);
                                 },
                                 child: Material(
@@ -158,11 +163,14 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                Icon(
-                                                  Icons.payment,
-                                                  color: Colors.white,
-                                                  size: 35,
-                                                ),
+                                                isWait
+                                                    ? LoadingCircle(
+                                                        30, Colors.white)
+                                                    : Icon(
+                                                        Icons.payment,
+                                                        color: Colors.white,
+                                                        size: 35,
+                                                      ),
                                               ],
                                             )
                                           : Row(
@@ -189,8 +197,16 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
             )));
   }
 
-  Future<int> checkOut() async {
-    widget.cart.checkOut();
+  Future<int> checkOut(String total) async {
+    setState(() {
+      isWait = true;
+    });
+    widget.cart.checkOut().then((value) => {
+          if (value) {PushNotificationService.pushNotification(total)}
+        });
+    setState(() {
+      isWait = false;
+    });
     return 0;
   }
 }
@@ -255,11 +271,7 @@ Widget _ItemOrder(Item item, Function(int) deleteFromCart, context) {
         SizedBox(
           width: 3,
         ),
-        // xoa
-        // FlatButton(
-        //   onPressed: () {
-        //     deleteFromCart(item.product.id);
-        //   },
+
         Container(
           margin: EdgeInsets.all(10),
           width: 60,
