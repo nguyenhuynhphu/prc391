@@ -1,6 +1,5 @@
 // import 'package:donationsystem/repository/user_repository.dart';
 
-import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +32,8 @@ class RootScreenState extends State {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+        _showDialog(
+            message["notification"]["title"], message["notification"]["body"]);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
@@ -53,12 +54,51 @@ class RootScreenState extends State {
     });
   }
 
+  void _showDialog(String title, String content) {
+    // flutter defined function
+    print("asdfasdf");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("$title"),
+          content: Row(
+            children: [
+              Container(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset("images/list.png", fit: BoxFit.cover)),
+              Text("$content"),
+            ],
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<String> signIn(String email, String password) async {
     try {
-      auth.signIn(email, password);
-      PushNotificationService.updateToken(email, token);
+      await auth.signIn(email, password).then((value) {
+        if (value != null) {
+          PushNotificationService.updateToken(email, token);
+          return "success";
+        } else {
+          return "error";
+        }
+      });
     } catch (e) {
-      return e.toString();
+      print(e.toString());
+      return "error";
     }
   }
 

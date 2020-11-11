@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prc391/models/product/Product.dart';
 import 'package:http/http.dart';
 import 'package:prc391/services/api_handler.dart';
+import 'package:prc391/widgets/loading-circle.dart';
 
 class NewItemScreen extends StatefulWidget {
   final Product product;
@@ -23,6 +24,7 @@ class NewItemScreenState extends State<NewItemScreen> {
   final nameController = TextEditingController();
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
+  int isWait = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -48,39 +50,46 @@ class NewItemScreenState extends State<NewItemScreen> {
               child: Column(
                 children: [
                   Container(
-                    child: Stack(
-                      children: [
-                        Positioned(
-                            child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 260,
-                                margin: EdgeInsets.only(bottom: 25),
-                                child: handelPicture())),
-                        Positioned.fill(
-                          bottom: 50,
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: FlatButton(
-                                onPressed: () async {
-                                  var pickedFile = await ImagePicker()
-                                      .getImage(source: ImageSource.gallery);
-                                  setState(() {
-                                    _image = File(pickedFile.path);
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      top: 10, bottom: 10, left: 15, right: 15),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(18),
-                                      border: Border.all(
-                                          color: Colors.black, width: 0.5)),
-                                  child: Text("Pick a picture"),
-                                ),
-                              )),
-                        )
-                      ],
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 260,
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.only(bottom: 25),
+                                  child: handelPicture())),
+                          Positioned.fill(
+                            bottom: 50,
+                            child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: FlatButton(
+                                  onPressed: () async {
+                                    var pickedFile = await ImagePicker()
+                                        .getImage(source: ImageSource.gallery);
+                                    setState(() {
+                                      _image = File(pickedFile.path);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        bottom: 10,
+                                        left: 15,
+                                        right: 15),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(18),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.5)),
+                                    child: Text("Pick a picture"),
+                                  ),
+                                )),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -176,19 +185,32 @@ class NewItemScreenState extends State<NewItemScreen> {
                     ),
                   ),
                   widget.product != null
-                      ? Container(
-                          margin: EdgeInsets.only(
-                              left: 10, right: 10, bottom: 15, top: 5),
-                          decoration: new BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            onPressed: () => deleteProduct(widget.product.id),
-                            color: Colors.white,
-                            icon: Icon(Icons.delete),
-                          ),
-                        )
+                      ? isWait == 1
+                          ? Container(
+                              width: 25,
+                              height: 70,
+                              child: LoadingCircle(30, Colors.red))
+                          : Container(
+                              margin: EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 15, top: 5),
+                              decoration: new BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    isWait = 1;
+                                  });
+                                  await deleteProduct(widget.product.id);
+                                  setState(() {
+                                    isWait = 0;
+                                  });
+                                },
+                                color: Colors.white,
+                                icon: Icon(Icons.delete),
+                              ),
+                            )
                       : Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -210,12 +232,26 @@ class NewItemScreenState extends State<NewItemScreen> {
                         margin: EdgeInsets.only(left: 10, right: 10),
                         width: 150,
                         child: RaisedButton(
-                          onPressed: () => saveProduct(),
+                          onPressed: () async {
+                            setState(() {
+                              isWait = 2;
+                            });
+                            await saveProduct();
+                            setState(() {
+                              isWait = 0;
+                            });
+                          },
                           color: Color.fromRGBO(44, 209, 172, 1),
-                          child: Text(
-                            "Save",
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
+                          child: isWait == 2
+                              ? Container(
+                                  width: 20,
+                                  height: 14,
+                                  child: LoadingCircle(14, Colors.white))
+                              : Text(
+                                  "Save",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                ),
                         ),
                       ),
                     ],

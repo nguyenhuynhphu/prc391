@@ -32,6 +32,43 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
     });
   }
 
+  void _showDialog(String title, String content) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("$title"),
+          content: Row(
+            children: [
+              Container(
+                  height: 50,
+                  width: 50,
+                  child:
+                      Image.asset("images/bubble-tea.png", fit: BoxFit.cover)),
+              Text("$content",
+                  style: TextStyle(fontSize: 20, color: Colors.green[400])),
+            ],
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                "Close",
+                style: TextStyle(color: Colors.red[900]),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,6 +241,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
       isWait = false;
       cartIsNotNull = widget.cart.isEmpty();
     });
+    _showDialog("Order", "Got order");
 
     return 0;
   }

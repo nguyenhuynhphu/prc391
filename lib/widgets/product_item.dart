@@ -60,7 +60,7 @@ class _ProductItemState extends State<ProductItem> {
               image: DecorationImage(
                   image: widget.item.image != null
                       ? NetworkImage(widget.item.image)
-                      : AssetImage("images/cookiechoco.jpg"),
+                      : AssetImage("images/bubble-tea.png"),
                   fit: BoxFit.cover),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
@@ -78,8 +78,9 @@ class _ProductItemState extends State<ProductItem> {
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15))),
             margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height - 450,
+              top: MediaQuery.of(context).size.height - 510,
             ),
+            padding: EdgeInsets.only(left: 10, right: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -92,6 +93,7 @@ class _ProductItemState extends State<ProductItem> {
                 ),
                 Text(
                   widget.item.name,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Varela',

@@ -27,7 +27,7 @@ class Product {
         id: json['id'],
         price: json['price'],
         name: json['name'],
-        description: json['desc'],
+        description: json['description'],
         image: json['image']);
   }
 

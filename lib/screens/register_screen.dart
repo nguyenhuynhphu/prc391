@@ -6,6 +6,7 @@ import 'package:prc391/models/user/user.dart';
 import 'package:prc391/services/api_handler.dart';
 import 'package:prc391/services/auth.dart';
 import 'package:http/http.dart';
+import 'package:prc391/widgets/loading-circle.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  bool isWait = false;
   @override
   void initState() {}
 
@@ -169,12 +171,24 @@ class RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: new BorderRadius.circular(4),
                     ),
                     onPressed: () async {
-                      registerAccount();
+                      setState(() {
+                        isWait = true;
+                      });
+                      await registerAccount();
+                      setState(() {
+                        isWait = false;
+                      });
                     },
-                    child: Text('Sign Up',
-                        style: TextStyle(
-                            color: Color.fromRGBO(44, 209, 172, 1),
-                            fontSize: 14)))),
+                    child: isWait
+                        ? Container(
+                            width: 20,
+                            height: 14,
+                            child: LoadingCircle(
+                                14, Color.fromRGBO(44, 209, 172, 1)))
+                        : Text('Sign Up',
+                            style: TextStyle(
+                                color: Color.fromRGBO(44, 209, 172, 1),
+                                fontSize: 14)))),
           ],
         ),
       ),

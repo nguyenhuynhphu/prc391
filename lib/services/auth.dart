@@ -31,7 +31,8 @@ class Auth implements BaseAuth {
         print("login: " + value.toString());
       });
     } catch (e) {
-      return e.toString();
+      print(e.toString());
+      return null;
     }
   }
 

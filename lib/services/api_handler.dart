@@ -9,4 +9,5 @@ class ApiHandler {
   static String NEW_USER = PREFIX + "/accounts";
   static String NOTIFY = PREFIX + "/notifications";
   static String accountID = '';
+  static String username = '';
 }

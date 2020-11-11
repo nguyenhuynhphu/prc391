@@ -26,7 +26,9 @@ class PushNotificationService {
         <String, dynamic>{
           'notification': <String, dynamic>{
             'body': '$content',
-            'title': '$title'
+            'title': '$title',
+            "image":
+                "https://firebasestorage.googleapis.com/v0/b/prc391-2020.appspot.com/o/list.png?alt=media&token=613100a2-872f-48e2-b849-f086040eac57"
           },
           'priority': 'high',
           'data': <String, dynamic>{
@@ -38,8 +40,6 @@ class PushNotificationService {
         },
       ),
     );
-    print(token);
-    print(res);
   }
 
   //update token when login on new device
@@ -51,10 +51,8 @@ class PushNotificationService {
       http.Response response =
           await http.put(ApiHandler.NOTIFY, headers: headers, body: body);
       if (response.statusCode == 200) {
-        print("OKKKKKKKKKKKk");
         return "OK";
       } else {
-        print("WRONG");
         return "ERROR";
       }
     } catch (e) {
@@ -62,9 +60,8 @@ class PushNotificationService {
     }
   }
 
-  static Future<void> pushNotification(String total) async {
+  static Future<void> pushNotification(String username, String total) async {
     try {
-      print(total);
       //get list token
       Map<String, String> headers = {"Content-type": "application/json"};
       http.Response response =
@@ -74,9 +71,8 @@ class PushNotificationService {
         //check token
         if (token != null && token.toString().trim().length != 0) {
           //push notify
-          print(token);
-          await sendAndRetrieveMessage(token.toString(), "BobaHub Notification",
-              "Get a order \nTotal: $total");
+          await sendAndRetrieveMessage(token.toString(), "BobaHub New Order",
+              "$username make a order \nTotal: $total\$");
         }
       }
     } catch (e) {

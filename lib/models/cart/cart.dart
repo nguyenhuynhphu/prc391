@@ -104,7 +104,8 @@ class Cart {
       http.Response response =
           await http.post(ApiHandler.POST_ORDER, headers: headers, body: body);
       if (response.statusCode == 200) {
-        PushNotificationService.pushNotification(total.toString());
+        PushNotificationService.pushNotification(
+            ApiHandler.username, total.toString());
         cleanCart();
         return true;
       } else {
