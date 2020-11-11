@@ -30,8 +30,9 @@ class Auth implements BaseAuth {
           .then((value) {
         print("login: " + value.toString());
       });
+      return "OK";
     } catch (e) {
-      print(e.toString());
+      print("auth: " + e.toString());
       return null;
     }
   }

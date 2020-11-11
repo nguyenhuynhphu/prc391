@@ -69,6 +69,9 @@ class RootScreenState extends State {
                   height: 50,
                   width: 50,
                   child: Image.asset("images/list.png", fit: BoxFit.cover)),
+              SizedBox(
+                width: 15,
+              ),
               Text("$content"),
             ],
           ),
@@ -97,7 +100,7 @@ class RootScreenState extends State {
         }
       });
     } catch (e) {
-      print(e.toString());
+      print("errr: " + e.toString());
       return "error";
     }
   }

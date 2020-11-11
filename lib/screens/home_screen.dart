@@ -103,8 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //xu ly neu search ko ra
                       },
                       decoration: InputDecoration(
-                          hintText: 'example: cookie',
-                          border: InputBorder.none),
+                          hintText: 'example: tea', border: InputBorder.none),
                     ),
                   ),
                   Container(

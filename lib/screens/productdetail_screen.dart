@@ -72,12 +72,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           style: TextStyle(
               fontFamily: 'Varela', fontSize: 20, color: Color(0xFF545D68)),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications_none, color: Color(0xFF545D68)),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Container(
         color: Colors.white,
@@ -132,7 +126,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Text(
-                '''the cookie is in the cookie jar the cookie is now a picture the cookie monster tries to steal the cookie but''',
+                widget.item.description,
                 style: TextStyle(
                   fontFamily: 'Varela',
                   fontSize: 18,

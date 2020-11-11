@@ -78,7 +78,7 @@ class _ProductItemState extends State<ProductItem> {
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15))),
             margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height - 510,
+              top: MediaQuery.of(context).size.height - 450,
             ),
             padding: EdgeInsets.only(left: 10, right: 10),
             child: Column(

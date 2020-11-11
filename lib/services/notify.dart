@@ -51,6 +51,7 @@ class PushNotificationService {
       http.Response response =
           await http.put(ApiHandler.NOTIFY, headers: headers, body: body);
       if (response.statusCode == 200) {
+        print("update TOken " + token);
         return "OK";
       } else {
         return "ERROR";
@@ -70,9 +71,9 @@ class PushNotificationService {
       for (Object token in model) {
         //check token
         if (token != null && token.toString().trim().length != 0) {
-          //push notify
-          await sendAndRetrieveMessage(token.toString(), "BobaHub New Order",
-              "$username make a order \nTotal: $total\$");
+          print(token);
+          sendAndRetrieveMessage(token.toString(), "BobaHub New Order",
+              "$username make a order\nTotal: $total\$");
         }
       }
     } catch (e) {
